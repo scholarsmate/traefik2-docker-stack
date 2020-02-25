@@ -1,31 +1,34 @@
 version: "3"
 
 services:
-  frontend:
+  nexus:
     image: sonatype/nexus3
-    container_name: nexus_frontend
     volumes:
-      - nexus-data:/nexus-data
+      - nexus_data:/nexus-data
     networks:
       - traefik-proxy
       - default
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.nexus_insecure.entrypoints=web
-      - traefik.http.routers.nexus_insecure.rule=Host(`nexus.domain.com`)
-      - traefik.http.routers.nexus_insecure.middlewares=redirect@file
-
-      - traefik.http.routers.nexus.entrypoints=web-secure
-      - traefik.http.routers.nexus.rule=Host(`nexus.domain.com`)
-      - traefik.http.routers.nexus.tls.certresolver=letsencrypt
-      - traefik.http.services.nexus.loadbalancer.server.port=8081
-      - traefik.docker.network=traefik-proxy
-    restart: unless-stopped
+      
+    # Control the number of instances deployed
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.nexus.entrypoints=web
+        - traefik.http.services.nexus.loadbalancer.server.port=8081
+        - traefik.http.routers.nexus.rule=Host(`nexus.domain.com`)
+        # configure port for hosted docker repository in Nexus
+        - traefik.http.services.labdocker.loadbalancer.server.port=8083
+        - traefik.http.routers.labdocker.rule=Host(`docker.domain.com`)
+        - traefik.docker.network=traefik-proxy
 
 networks:
   traefik-proxy:
     external: true
 
 volumes:
-  nexus-data:
+  nexus_data:
 
