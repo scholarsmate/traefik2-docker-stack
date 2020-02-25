@@ -75,7 +75,7 @@ services:
 
   # hubot, the popular chatbot (add the bot user first and change the password before starting this image)
   hubot:
-    entrypoint: [ '/bin/sh', '-c', 'sleep 900000' ]
+    #entrypoint: [ '/bin/sh', '-c', 'sleep 900000' ]
     image: rocketchat/hubot-rocketchat:latest
     environment:
       - ROCKETCHAT_URL=rocketchat:3000
@@ -93,9 +93,6 @@ services:
         - "traefik.enable=false"
     volumes:
       - rocketchat_scripts:/home/hubot/scripts
-    # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
-    ports:
-      - 3001:8080
 
 networks:
   traefik-proxy:
