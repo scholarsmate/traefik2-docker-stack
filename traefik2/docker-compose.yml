@@ -34,7 +34,7 @@ services:
         # Explicitly tell Traefik to expose this container
         - traefik.enable=true
         - traefik.http.routers.traefik.entrypoints=web
-        - traefik.http.routers.traefik.rule=Host(`traefik.domain.com`)
+        - traefik.http.routers.traefik.rule=Host(`traefik.${SVC_DOMAIN?}`)
         - traefik.http.services.traefik.loadbalancer.server.port=8080
         - traefik.docker.network=traefik-proxy
     ports:

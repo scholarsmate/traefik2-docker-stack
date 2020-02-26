@@ -4,20 +4,20 @@ services:
   # The GitLab container itself
   gitlab:
     image: 'gitlab/gitlab-ce:latest'
-    hostname: 'gitlab.domain.com'
+    hostname: 'gitlab.${SVC_DOMAIN?}'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         letsencrypt['enable'] = false
-        external_url 'http://gitlab.domain.com'
+        external_url 'http://gitlab.${SVC_DOMAIN?}'
         nginx['listen_https'] = false
         nginx['listen_port'] = 80
         gitlab_rails['backup_upload_remote_directory'] = 's3-backup-bucket'
         gitlab_rails['smtp_enable'] = true
-        gitlab_rails['smtp_address'] = "smtp.domain.com"
+        gitlab_rails['smtp_address'] = "smtp.${SVC_DOMAIN?}"
         gitlab_rails['smtp_port'] = 587
-        gitlab_rails['smtp_user_name'] = "gitlab@domain.com"
+        gitlab_rails['smtp_user_name'] = "gitlab@${SVC_DOMAIN?}"
         gitlab_rails['smtp_password'] = "EMAILPASSWORD"
-        gitlab_rails['smtp_domain'] = "domain.com"
+        gitlab_rails['smtp_domain'] = "${SVC_DOMAIN?}"
         gitlab_rails['smtp_authentication'] = "plain"
         gitlab_rails['smtp_enable_starttls_auto'] = true
         gitlab_rails['gitlab_shell_ssh_port'] = 22
@@ -35,7 +35,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.gitlab.entrypoints=web
-        - traefik.http.routers.gitlab.rule=Host(`gitlab.domain.com`)
+        - traefik.http.routers.gitlab.rule=Host(`gitlab.${SVC_DOMAIN?}`)
         - traefik.http.services.gitlab.loadbalancer.server.port=80
         - traefik.docker.network=traefik-proxy
 

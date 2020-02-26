@@ -13,7 +13,7 @@ services:
   jira:
     image: atlassian/jira-software
     environment:
-      - ATL_PROXY_NAME=jira.domain.com
+      - ATL_PROXY_NAME=jira.${SVC_DOMAIN?}
       - ATL_PROXY_PORT=443
       - ATL_TOMCAT_SCHEME=https
     volumes:
@@ -31,14 +31,14 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.jira.entrypoints=web
-        - traefik.http.routers.jira.rule=Host(`jira.domain.com`)
+        - traefik.http.routers.jira.rule=Host(`jira.${SVC_DOMAIN?}`)
         - traefik.http.services.jira.loadbalancer.server.port=8080
         - traefik.docker.network=traefik-proxy
 
   confluence:
     image: atlassian/confluence-server:latest
     environment:
-      - CATALINA_CONNECTOR_PROXYNAME=confluence.domain.com
+      - CATALINA_CONNECTOR_PROXYNAME=confluence.${SVC_DOMAIN?}
       - CATALINA_CONNECTOR_PROXYPORT=443
       - CATALINA_CONNECTOR_SCHEME=https
     volumes:
@@ -56,7 +56,7 @@ services:
       labels:
         - traefik.enable=true
         - traefik.http.routers.confluence.entrypoints=web
-        - traefik.http.routers.confluence.rule=Host(`confluence.domain.com`)
+        - traefik.http.routers.confluence.rule=Host(`confluence.${SVC_DOMAIN?}`)
         - traefik.http.services.confluence.loadbalancer.server.port=8090
         - traefik.docker.network=traefik-proxy
 
