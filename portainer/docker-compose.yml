@@ -51,7 +51,6 @@ services:
 networks:
   agent-network:
     driver: overlay
-    attachable: true
   traefik-proxy:
     external: true
 
