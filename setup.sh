@@ -9,8 +9,15 @@ echo "SVC_DOMAIN=${SVC_DOMAIN}"
 
 set -ex
 
+# Install dry docker manager for the terminal
 docker pull moncho/dry
+mkdir -p ~/bin/
+cat <<__EOF__ | tee ~/bin/dry
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock moncho/dry
+__EOF__
+chmod +x ~/bin/dry
 
+# Deploy the stack
 docker network create --driver overlay traefik-proxy >/dev/null 2>&1 || true
 for app in traefik2 metrics portainer dbadmin atlassian gitlab nexus rocketchat; do
    SVC_DOMAIN="${SVC_DOMAIN}" docker stack deploy --compose-file $app/docker-compose.yml devops
