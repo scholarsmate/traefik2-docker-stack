@@ -3,7 +3,7 @@ version: '3'
 services:
   # The GitLab container itself
   gitlab:
-    image: 'gitlab/gitlab-ce:latest'
+    image: 'gitlab/gitlab-ee:latest'
     hostname: 'gitlab.${SVC_DOMAIN?}'
     environment:
       GITLAB_OMNIBUS_CONFIG: |
