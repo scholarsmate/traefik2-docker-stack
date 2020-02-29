@@ -12,7 +12,7 @@ set -ex
 # Install dry docker manager for the terminal
 docker pull moncho/dry
 mkdir -p ~/bin/
-cat <<__EOF__ | tee ~/bin/dry
+cat << __EOF__ | tee ~/bin/dry
 docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock moncho/dry
 __EOF__
 chmod +x ~/bin/dry

@@ -47,7 +47,7 @@ services:
       mode: replicated
       replicas: 1
       labels:
-        - "traefik.enable=false"
+        - traefik.enable=false
 
   # this container's job is just run the command to initialize the replica set.
   # it will run the command and remove himself (it will not stay running)
