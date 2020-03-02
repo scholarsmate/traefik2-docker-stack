@@ -2,13 +2,31 @@ version: '3'
 
 services:
 
-  db:
+  jira_db:
     image: postgres
     environment:
-      POSTGRES_PASSWORD: PG_PASSWORD
+      - POSTGRES_DB=jiradb
+      - POSTGRES_USER=atlassian
+      - POSTGRES_PASSWORD=atlassian
+      - POSTGRES_ENCODING=UTF8
+      - POSTGRES_COLLATE=C
+      - POSTGRES_COLLATE_TYPE=C
     command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_jira_data:/var/lib/postgresql/data
+
+  confluence_db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=confluencedb
+      - POSTGRES_USER=atlassian
+      - POSTGRES_PASSWORD=atlassian
+      - POSTGRES_ENCODING=UTF8
+      - POSTGRES_COLLATE=C
+      - POSTGRES_COLLATE_TYPE=C
+    command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
+    volumes:
+      - postgres_confluence_data:/var/lib/postgresql/data
 
   jira:
     image: atlassian/jira-software
@@ -16,6 +34,10 @@ services:
       - ATL_PROXY_NAME=jira.${SVC_DOMAIN?}
       - ATL_PROXY_PORT=443
       - ATL_TOMCAT_SCHEME=https
+      - ATL_JDBC_URL=jdbc:postgresql://jira_db:5432/jiradb
+      - ATL_JDBC_USER=atlassian
+      - ATL_JDBC_PASSWORD=atlassian
+      - ALT_DB_DRIVER=org.postgresql.Driver
     volumes:
       - jira_data:/var/atlassian/application-data/jira
       - /etc/localtime:/etc/localtime:ro
@@ -23,7 +45,7 @@ services:
       - traefik-proxy
       - default
     depends_on:
-      - db
+      - jira_db
     # Control the number of instances deployed
     deploy:
       mode: replicated
@@ -38,9 +60,13 @@ services:
   confluence:
     image: atlassian/confluence-server:latest
     environment:
-      - CATALINA_CONNECTOR_PROXYNAME=confluence.${SVC_DOMAIN?}
-      - CATALINA_CONNECTOR_PROXYPORT=443
-      - CATALINA_CONNECTOR_SCHEME=https
+      - ATL_PROXY_NAME=confluence.${SVC_DOMAIN?}
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
+      - ATL_JDBC_URL=jdbc:postgresql://confluence_db:5432/confluencedb
+      - ATL_JDBC_USER=atlassian
+      - ATL_JDBC_PASSWORD=atlassian
+      - ALT_DB_DRIVER=org.postgresql.Driver
     volumes:
       - confluence_data:/var/atlassian/application-data/confluence
       - /etc/localtime:/etc/localtime:ro
@@ -48,7 +74,7 @@ services:
       - traefik-proxy
       - default
     depends_on:
-      - db
+      - confluence_db
     # Control the number of instances deployed
     deploy:
       mode: replicated
@@ -65,6 +91,7 @@ networks:
     external: true
 
 volumes:
-  postgres_data:
+  postgres_jira_data:
+  postgres_confluence_data:
   confluence_data:
   jira_data:
