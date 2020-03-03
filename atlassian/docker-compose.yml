@@ -36,6 +36,8 @@ services:
     image: atlassian/jira-software
     environment:
       - ATL_PROXY_NAME=jira.${SVC_DOMAIN?}
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
       - ATL_JDBC_URL=jdbc:postgresql://jira_db:5432/jiradb
       - ATL_JDBC_USER=atlassian
       - ATL_JDBC_PASSWORD=atlassian
@@ -54,6 +56,7 @@ services:
       mode: replicated
       replicas: 1
       labels:
+        - restic-compose-backup.volumes=true
         - traefik.enable=true
         - traefik.http.routers.jira.entrypoints=web
         - traefik.http.routers.jira.rule=Host(`jira.${SVC_DOMAIN?}`)
@@ -64,6 +67,8 @@ services:
     image: atlassian/confluence-server:latest
     environment:
       - ATL_PROXY_NAME=confluence.${SVC_DOMAIN?}
+      - ATL_PROXY_PORT=443
+      - ATL_TOMCAT_SCHEME=https
       - ATL_JDBC_URL=jdbc:postgresql://confluence_db:5432/confluencedb
       - ATL_JDBC_USER=atlassian
       - ATL_JDBC_PASSWORD=atlassian

@@ -10,6 +10,12 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       # Persistent storage of restic cache (greatly speeds up all restic operations)
       - cache:/cache
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
 
 volumes:
   cache:
