@@ -34,7 +34,8 @@ services:
         - traefik.docker.network=traefik-proxy
   
   grafana:
-    image: scholarsmate/grafana:ctc-devops
+    #image: scholarsmate/grafana:ctc-devops
+    image: grafana/grafana
     depends_on:
       - prometheus
     volumes:

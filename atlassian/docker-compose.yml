@@ -14,6 +14,8 @@ services:
     command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
     volumes:
       - postgres_jira_data:/var/lib/postgresql/data
+    labels:
+      - restic-compose-backup.postgres=true
 
   confluence_db:
     image: postgres
@@ -27,6 +29,8 @@ services:
     command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
     volumes:
       - postgres_confluence_data:/var/lib/postgresql/data
+    labels:
+      - restic-compose-backup.postgres=true
 
   jira:
     image: atlassian/jira-software
@@ -77,6 +81,7 @@ services:
       mode: replicated
       replicas: 1
       labels:
+        - restic-compose-backup.volumes=true
         - traefik.enable=true
         - traefik.http.routers.confluence.entrypoints=web
         - traefik.http.routers.confluence.rule=Host(`confluence.${SVC_DOMAIN?}`)

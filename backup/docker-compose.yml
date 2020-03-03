@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  backup:
+    image: 'zettaio/restic-compose-backup'
+    env_file:
+      - /etc/restic/restic.env
+    volumes:
+      # We need to communicate with docker
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      # Persistent storage of restic cache (greatly speeds up all restic operations)
+      - cache:/cache
+
+volumes:
+  cache:
