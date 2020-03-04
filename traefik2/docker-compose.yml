@@ -18,7 +18,6 @@ services:
       # Do not expose containers unless explicitly told so
       - "--providers.docker.exposedbydefault=false"
       - "--providers.docker.swarmmode=true"
-      - "--providers.docker.watch"
    # Control the number of instances deployed
     deploy:
       mode: global

@@ -52,13 +52,15 @@ services:
   # this container's job is just run the command to initialize the replica set.
   # it will run the command and remove himself (it will not stay running)
   mongo-init-replica:
+    image: mongo:4.0
     # Control the number of instances deployed
     deploy:
       mode: replicated
       replicas: 1
+      restart_policy:
+        condition: on-failure
       labels:
         - "traefik.enable=false"
-    image: mongo:3.4
     command: >
       bash -c
         "for i in `seq 1 30`; do
