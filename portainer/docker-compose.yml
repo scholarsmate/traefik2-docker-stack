@@ -28,7 +28,7 @@ services:
   
   portainer:
     image: portainer/portainer
-    command: -H tcp://tasks.portainer-agent-internal:9001 --tlsskipverify
+    command: -H tcp://tasks.portainer-agent-internal:9001 --tlsskipverify --no-analytics
     volumes:
       - portainer_data:/data
     networks:
