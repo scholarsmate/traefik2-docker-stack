@@ -25,13 +25,15 @@ services:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
       - gitlab_data:/var/opt/gitlab
+    labels:
+      - restic-compose-backup.volumes=true
     networks:
       - traefik-proxy
       - default
     # Control the number of instances deployed
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 1
       labels:
         - traefik.enable=true
         - traefik.http.routers.gitlab.entrypoints=web

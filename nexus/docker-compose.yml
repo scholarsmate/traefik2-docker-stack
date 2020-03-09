@@ -5,10 +5,11 @@ services:
     image: sonatype/nexus3
     volumes:
       - nexus_data:/nexus-data
+    labels:
+      - restic-compose-backup.volumes=true
     networks:
       - traefik-proxy
       - default
-      
     # Control the number of instances deployed
     deploy:
       mode: replicated
@@ -34,4 +35,3 @@ networks:
 
 volumes:
   nexus_data:
-

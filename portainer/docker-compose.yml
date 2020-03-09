@@ -31,6 +31,8 @@ services:
     command: -H tcp://tasks.portainer-agent-internal:9001 --tlsskipverify --no-analytics
     volumes:
       - portainer_data:/data
+    labels:
+      - restic-compose-backup.volumes=true
     networks:
       - traefik-proxy
       - agent-network

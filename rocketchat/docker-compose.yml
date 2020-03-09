@@ -14,6 +14,8 @@ services:
         done; (exit $$s)"
     volumes:
       - rocketchat_uploads:/app/uploads
+    labels:
+      - restic-compose-backup.volumes=true
     environment:
       - PORT=3000
       - ROOT_URL=http://localhost:3000
@@ -25,7 +27,7 @@ services:
     # Control the number of instances deployed
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 1
       labels:
         - traefik.enable=true
         - traefik.http.routers.rocketchat.entrypoints=web
@@ -38,11 +40,13 @@ services:
 
   mongo:
     image: mongo:4.0
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
     volumes:
      - rocketchat_db:/data/db
      #- ./data/dump:/dump
-    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
-       # Control the number of instances deployed
+    labels:
+      - restic-compose-backup.volumes=true
+    # Control the number of instances deployed
     deploy:
       mode: replicated
       replicas: 1
@@ -53,14 +57,6 @@ services:
   # it will run the command and remove himself (it will not stay running)
   mongo-init-replica:
     image: mongo:4.0
-    # Control the number of instances deployed
-    deploy:
-      mode: replicated
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      labels:
-        - "traefik.enable=false"
     command: >
       bash -c
         "for i in `seq 1 30`; do
@@ -74,6 +70,14 @@ services:
         done; (exit $$s)"
     depends_on:
       - mongo
+    # Control the number of instances deployed
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      labels:
+        - "traefik.enable=false"
 
 networks:
   traefik-proxy:
@@ -81,5 +85,4 @@ networks:
 
 volumes:
   rocketchat_db:
-  rocketchat_scripts:
   rocketchat_uploads:

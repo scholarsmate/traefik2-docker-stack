@@ -12,7 +12,9 @@ services:
       - cache:/cache
     deploy:
       mode: replicated
-      replicas: 1
+      replicas: 3
+      labels:
+        - traefik.enable=false
       placement:
         constraints:
           - node.role == manager

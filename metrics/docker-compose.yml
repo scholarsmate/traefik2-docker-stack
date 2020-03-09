@@ -6,6 +6,10 @@ services:
     volumes:
       - ./prometheus/:/etc/prometheus/
       - prometheus_data:/prometheus
+    labels:
+      - restic-compose-backup.volumes=true
+      # Backup only the prometheus_data volume
+      - restic-compose-backup.volumes.include='prometheus_data'
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -41,6 +45,10 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning/:/etc/grafana/provisioning/
+    labels:
+      - restic-compose-backup.volumes=true
+      # Backup only the grafana_data volume
+      - restic-compose-backup.volumes.include='grafana_data'
     env_file:
       - ./grafana/config.monitoring
     networks:
