@@ -77,7 +77,7 @@ services:
       restart_policy:
         condition: on-failure
       labels:
-        - "traefik.enable=false"
+        - traefik.enable=false
 
 networks:
   traefik-proxy:

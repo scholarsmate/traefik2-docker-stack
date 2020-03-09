@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 # Find the possible containers
