@@ -3,7 +3,7 @@ version: '3'
 services:
 
   jira_db:
-    image: postgres
+    image: postgres:10-alpine
     environment:
       - POSTGRES_DB=jiradb
       - POSTGRES_USER=atlassian
@@ -18,7 +18,7 @@ services:
       - restic-compose-backup.postgres=true
 
   confluence_db:
-    image: postgres
+    image: postgres:10-alpine
     environment:
       - POSTGRES_DB=confluencedb
       - POSTGRES_USER=atlassian
