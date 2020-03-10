@@ -9,15 +9,13 @@ services:
       # We need to communicate with docker
       - /var/run/docker.sock:/tmp/docker.sock:ro
       # Persistent storage of restic cache (greatly speeds up all restic operations)
-      - cache:/cache
+      - backup_cache:/cache
     deploy:
-      mode: replicated
-      replicas: 3
+      mode: global
+      restart_policy:
+        condition: any
       labels:
         - traefik.enable=false
-      placement:
-        constraints:
-          - node.role == manager
 
 volumes:
-  cache:
+  backup_cache:
