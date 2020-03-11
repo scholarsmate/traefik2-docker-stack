@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups/}
+
 # Find the possible containers
 containers=$(docker ps | grep postgres | awk '{print $1}')
 for container in $containers; do
@@ -26,7 +28,7 @@ for container in $containers; do
     fi
   done
   if [[ -n "$POSTGRES_DB" && -n "$POSTGRES_USER" && -n "$POSTGRES_PASSWORD" ]]; then
-    docker exec $container /bin/bash -c "PGPASSWORD=$POSTGRES_PASSWORD /usr/bin/pg_dump -U $POSTGRES_USER $POSTGRES_DB" | gzip -9 > "$POSTGRES_DB"_backup.sql.$(date +%Y%m%d).gz
+    docker exec $container /bin/bash -c "PGPASSWORD=$POSTGRES_PASSWORD /usr/bin/pg_dump -U $POSTGRES_USER $POSTGRES_DB" | gzip -9 > "${BACKUP_DIR}${POSTGRES_DB}_backup.sql.$(date +%Y%m%d).gz"
   else
     echo "[WARN] POSTGRES_PASSWORD, POSTGRES_USER or POSTGRES_DB not populated for container $container." >&2
   fi

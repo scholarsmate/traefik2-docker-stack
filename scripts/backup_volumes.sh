@@ -9,7 +9,7 @@ set -e
 
 today=$(date +"%Y%m%d")
 SVC_DOMAIN=${SVC_DOMAIN:-domain.com}
-BACKUP_DIR=${BACKUP_DIR:-/mnt/backups/}
+BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups/}
 VOLUME_DIR=${VOLUME_DIR:-/var/lib/docker/volumes/}
 
 # Make the backup directory
