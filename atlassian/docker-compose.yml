@@ -43,6 +43,8 @@ services:
       - ATL_JDBC_PASSWORD=atlassian
       - ATL_DB_TYPE=postgres72
       - ALT_DB_DRIVER=org.postgresql.Driver
+      - JVM_MINIMUM_MEMORY=2G
+      - JVM_MAXIMUM_MEMORY=4G
     volumes:
       - jira_data:/var/atlassian/application-data/jira
       - /etc/localtime:/etc/localtime:ro
@@ -76,6 +78,8 @@ services:
       - ATL_JDBC_USER=atlassian
       - ATL_JDBC_PASSWORD=atlassian
       - ATL_DB_TYPE=postgresql
+      - JVM_MINIMUM_MEMORY=2G
+      - JVM_MAXIMUM_MEMORY=4G
     volumes:
       - confluence_data:/var/atlassian/application-data/confluence
       - /etc/localtime:/etc/localtime:ro

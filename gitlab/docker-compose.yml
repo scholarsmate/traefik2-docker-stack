@@ -20,7 +20,9 @@ services:
         gitlab_rails['smtp_domain'] = "${SVC_DOMAIN?}"
         gitlab_rails['smtp_authentication'] = "plain"
         gitlab_rails['smtp_enable_starttls_auto'] = true
-        gitlab_rails['gitlab_shell_ssh_port'] = 22
+        gitlab_rails['gitlab_shell_ssh_port'] = 2222
+    ports:
+      - 2222:22
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
