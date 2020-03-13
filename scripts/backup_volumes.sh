@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run as root / sudo" >&2
+   echo "This script must be run as root" >&2
    exit 1
 fi
 
@@ -11,6 +11,13 @@ today=$(date +"%Y%m%d")
 SVC_DOMAIN=${SVC_DOMAIN:-domain.com}
 BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups/}
 VOLUME_DIR=${VOLUME_DIR:-/var/lib/docker/volumes/}
+
+# The backup directory should exist, if not it could be indicative of an NFS
+# issue and we don't want to create it because that would be on local filesystem.
+if [[ ! -d "${BACKUP_DIR}" ]]; then
+  echo "Backup diretory \"${BACKUP_DIR}\" does not exist" >&2
+  exit 1
+fi
 
 echo "Backing up GitLab..."
 if [[  $(docker service ls | grep -c devops_gitlab) > 0 ]]; then
