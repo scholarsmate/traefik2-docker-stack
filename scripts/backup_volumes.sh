@@ -12,10 +12,6 @@ SVC_DOMAIN=${SVC_DOMAIN:-domain.com}
 BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups/}
 VOLUME_DIR=${VOLUME_DIR:-/var/lib/docker/volumes/}
 
-# Make the backup directory
-mkdir -p "${BACKUP_DIR}"
-chown vagrant:vagrant "${BACKUP_DIR}"
-
 echo "Backing up GitLab..."
 if [[  $(docker service ls | grep -c devops_gitlab) > 0 ]]; then
   docker service rm devops_gitlab
