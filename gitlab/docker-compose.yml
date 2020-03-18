@@ -21,8 +21,6 @@ services:
         gitlab_rails['smtp_authentication'] = "plain"
         gitlab_rails['smtp_enable_starttls_auto'] = true
         gitlab_rails['gitlab_shell_ssh_port'] = 2222
-    ports:
-      - 2222:22
     volumes:
       - gitlab_config:/etc/gitlab
       - gitlab_logs:/var/log/gitlab
@@ -45,10 +43,10 @@ services:
 
         # Can't filter TCP traffic on SNI, see link below
         # https://community.containo.us/t/routing-ssh-traffic-with-traefik-v2/717/6
-        #- traefik.tcp.routers.gitlab-ssh.rule=HostSNI(`*`)
-        #- traefik.tcp.routers.gitlab-ssh.entrypoints=ssh
-        #- traefik.tcp.routers.gitlab-ssh.service=gitlab-ssh-svc
-        #- traefik.tcp.services.gitlab-ssh-svc.loadbalancer.server.port=22
+        - traefik.tcp.routers.gitlab-ssh.rule=HostSNI(`*`)
+        - traefik.tcp.routers.gitlab-ssh.entrypoints=ssh
+        - traefik.tcp.routers.gitlab-ssh.service=gitlab-ssh-svc
+        - traefik.tcp.services.gitlab-ssh-svc.loadbalancer.server.port=22
 
 networks:
   traefik-proxy:
