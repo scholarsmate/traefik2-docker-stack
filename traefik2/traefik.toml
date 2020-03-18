@@ -18,7 +18,6 @@
 
 [metrics]
   [metrics.prometheus]
-    entryPoint = "metrics"
 
 [api]
   dashboard = true
