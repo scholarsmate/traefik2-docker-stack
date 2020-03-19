@@ -45,6 +45,7 @@ services:
       - ALT_DB_DRIVER=org.postgresql.Driver
       - JVM_MINIMUM_MEMORY=2G
       - JVM_MAXIMUM_MEMORY=4G
+      - JVM_SUPPORT_RECOMMENDED_ARGS=-Djavax.net.ssl.trustStore=/var/atlassian/application-data/jira/cacerts
     volumes:
       - jira_data:/var/atlassian/application-data/jira
       - /etc/localtime:/etc/localtime:ro
@@ -80,6 +81,7 @@ services:
       - ATL_DB_TYPE=postgresql
       - JVM_MINIMUM_MEMORY=2G
       - JVM_MAXIMUM_MEMORY=4G
+      - JVM_SUPPORT_RECOMMENDED_ARGS=-Djavax.net.ssl.trustStore=/var/atlassian/application-data/confluence/cacerts
     volumes:
       - confluence_data:/var/atlassian/application-data/confluence
       - /etc/localtime:/etc/localtime:ro
