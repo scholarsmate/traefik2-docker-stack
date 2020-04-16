@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+
+  webserver:
+    image: nginx:alpine
+    volumes:
+      - /var/www/html:/usr/share/nginx/html
+    networks:
+      - traefik-proxy
+      - default
+    # Control the number of instances deployed
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.dbadmin.entrypoints=web
+        - traefik.http.routers.dbadmin.rule=Host(`www.${SVC_DOMAIN?}`)
+        - traefik.http.services.dbadmin.loadbalancer.server.port=80
+        - traefik.docker.network=traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
+
