@@ -16,8 +16,8 @@ STACK=${STACK:-devops}
 BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups}
 VOLUME_DIR=${VOLUME_DIR:-/var/lib/docker/volumes}
 
-SERVICES="${STACK}_jira ${STACK}_confluence ${STACK}_gitlab ${STACK}_rocketchat ${STACK}_mongo ${STACK}_nexus ${STACK}_prometheus ${STACK}_grafana"
-VOLUMES="${STACK}_jira_data ${STACK}_confluence_data ${STACK}_gitlab_config ${STACK}_gitlab_data ${STACK}_gitlab_logs ${STACK}_grafana_data ${STACK}_nexus_data ${STACK}_portainer_data ${STACK}_prometheus_data ${STACK}_rocketchat_uploads ${STACK}_rocketchat_db"
+SERVICES="${STACK}_jira ${STACK}_confluence ${STACK}_gitlab ${STACK}_rocketchat ${STACK}_mongo ${STACK}_nexus ${STACK}_sonar ${STACK}_prometheus ${STACK}_grafana"
+VOLUMES="${STACK}_jira_data ${STACK}_confluence_data ${STACK}_gitlab_config ${STACK}_gitlab_data ${STACK}_gitlab_logs ${STACK}_grafana_data ${STACK}_nexus_data ${STACK}_sonar_data ${STACK}_portainer_data ${STACK}_prometheus_data ${STACK}_rocketchat_uploads ${STACK}_rocketchat_db"
 
 # The backup directory should exist, if not it could be indicative of an NFS
 # issue and we don't want to create it because that would be on local filesystem.

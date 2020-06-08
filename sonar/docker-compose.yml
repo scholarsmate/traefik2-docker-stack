@@ -1,0 +1,49 @@
+version: '2'
+
+services:
+  sonar_db:
+    image: docker.io/bitnami/postgresql:10
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - postgres_sonar_data:/bitnami/postgresql
+    labels:
+      - restic-compose-backup.postgres=true
+
+  sonar:
+    image: docker.io/bitnami/sonarqube:7
+    environment:
+      - POSTGRESQL_HOST=sonar_db
+      - POSTGRESQL_ROOT_USER=postgres
+      - POSTGRESQL_CLIENT_CREATE_DATABASE_NAME=bitnami_sonarqube
+      - POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME=bn_sonarqube
+      - POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD=bitnami1234
+      - SONARQUBE_DATABASE_NAME=bitnami_sonarqube
+      - SONARQUBE_DATABASE_USER=bn_sonarqube
+      - SONARQUBE_DATABASE_PASSWORD=bitnami1234
+    volumes:
+      - sonar_data:/bitnami
+    labels:
+      - restic-compose-backup.volumes=true
+    networks:
+      - traefik-proxy
+      - default
+    depends_on:
+      - sonar_db
+    deploy:
+      mode: replicated
+      replicas: 1
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.sonar.entrypoints=web
+        - traefik.http.routers.sonar.rule=Host(`sonar.${SVC_DOMAIN?}`)
+        - traefik.http.services.sonar.loadbalancer.server.port=9000
+        - traefik.docker.network=traefik-proxy
+
+networks:
+  traefik-proxy:
+    external: true
+
+volumes:
+  sonar_data:
+  postgres_sonar_data:
