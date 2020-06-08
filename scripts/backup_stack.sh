@@ -10,7 +10,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 set -e
-
+mount -a
 today=$(date +"%Y%m%d")
 STACK=${STACK:-devops}
 BACKUP_DIR=${BACKUP_DIR:-/mnt/data/backups}
