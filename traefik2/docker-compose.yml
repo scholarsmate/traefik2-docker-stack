@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   traefik:
-    image: traefik:v2.1
+    image: traefik:v2.2
     deploy:
       mode: global
       placement:
