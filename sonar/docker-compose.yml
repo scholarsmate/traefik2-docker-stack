@@ -4,8 +4,6 @@ services:
 
   sonar_db:
     image: postgres:10-alpine
-    networks:
-      - sonarnet
     environment:
       - POSTGRES_DB=sonardb
       - POSTGRES_USER=sonar
