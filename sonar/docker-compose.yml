@@ -1,28 +1,35 @@
 version: '3'
 
 services:
+
   sonar_db:
-    image: docker.io/bitnami/postgresql:10
+    image: postgres:10-alpine
+    networks:
+      - sonarnet
     environment:
-      - ALLOW_EMPTY_PASSWORD=yes
+      - POSTGRES_DB=sonardb
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+      - POSTGRES_ENCODING=UTF8
+      - POSTGRES_COLLATE=C
+      - POSTGRES_COLLATE_TYPE=C
+    command: ["-c", "shared_buffers=256MB", "-c", "max_connections=200"]
     volumes:
-      - postgres_sonar_data:/bitnami/postgresql
+      - postgres_sonar_data:/var/lib/postgresql/data
     labels:
       - restic-compose-backup.postgres=true
 
   sonar:
-    image: docker.io/bitnami/sonarqube:7
+    image: sonarqube:8-community
     environment:
-      - POSTGRESQL_HOST=sonar_db
-      - POSTGRESQL_ROOT_USER=postgres
-      - POSTGRESQL_CLIENT_CREATE_DATABASE_NAME=bitnami_sonarqube
-      - POSTGRESQL_CLIENT_CREATE_DATABASE_USERNAME=bn_sonarqube
-      - POSTGRESQL_CLIENT_CREATE_DATABASE_PASSWORD=bitnami1234
-      - SONARQUBE_DATABASE_NAME=bitnami_sonarqube
-      - SONARQUBE_DATABASE_USER=bn_sonarqube
-      - SONARQUBE_DATABASE_PASSWORD=bitnami1234
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://sonar_db:5432/sonardb
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
     volumes:
-      - sonar_data:/bitnami
+      - sonarqube_conf:/opt/sonarqube/conf
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
     labels:
       - restic-compose-backup.volumes=true
     networks:
@@ -45,5 +52,8 @@ networks:
     external: true
 
 volumes:
-  sonar_data:
   postgres_sonar_data:
+  sonarqube_conf:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_bundled-plugins:
