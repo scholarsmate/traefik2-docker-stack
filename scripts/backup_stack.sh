@@ -59,6 +59,7 @@ for container in ${containers}; do
   done
   if [[ -n "$POSTGRES_DB" && -n "$POSTGRES_USER" && -n "$POSTGRES_PASSWORD" ]]; then
     docker exec $container /bin/bash -c "PGPASSWORD=${POSTGRES_PASSWORD} pg_dump -U ${POSTGRES_USER} ${POSTGRES_DB}" | gzip -9 > "${BACKUP_DIR}/${POSTGRES_DB}_backup.sql.${today}.gz"
+    chown vagrant:vagrant "${BACKUP_DIR}/${POSTGRES_DB}_backup.sql.${today}.gz"
   else
     echo "[WARN] POSTGRES_PASSWORD, POSTGRES_USER or POSTGRES_DB not populated for container $container." >&2
   fi
