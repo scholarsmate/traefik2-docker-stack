@@ -18,7 +18,7 @@ services:
       - restic-compose-backup.postgres=true
 
   sonar:
-    image: sonarqube:8-community
+    image: sonarqube:7.9-community
     environment:
       - SONARQUBE_JDBC_URL=jdbc:postgresql://sonar_db:5432/sonardb
       - SONARQUBE_JDBC_USERNAME=sonar
